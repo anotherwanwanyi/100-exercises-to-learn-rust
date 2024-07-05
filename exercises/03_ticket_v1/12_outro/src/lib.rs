@@ -11,3 +11,74 @@
 // Integration here has a very specific meaning: they test **the public API** of your project.
 // You'll need to pay attention to the visibility of your types and methods; integration
 // tests can't access private or `pub(crate)` items.
+
+pub struct Order {
+    product_name: String,
+    quantity: u32,
+    unit_price: u32
+}
+
+impl Order {
+    fn check_product_name(product_name: &str) {
+        match product_name {
+            s if s.is_empty() => panic!("Product name couldn't be empty."),
+            s if s.len() > 300 => panic!("Product name couldn't be longer than 300 bytes."),
+            _ => ()
+        }
+    }
+
+    fn check_quantity(quantity: u32) {
+        if quantity == 0 {
+            panic!("Quantity should be greater than zero.")
+        }
+    }
+
+    fn check_unit_price(unit_price: u32) {
+        if unit_price == 0 {
+            panic!("Unit Price should be greater than zero.")
+        }
+    }
+
+    pub fn new(product_name: String, quantity: u32, unit_price: u32) -> Order {
+        Self::check_product_name(product_name.as_str());
+        Self::check_quantity(quantity);
+        Self::check_unit_price(unit_price);
+
+        Order {
+            product_name,
+            quantity,
+            unit_price
+        }
+    }
+
+    pub fn total(&self) -> u32 {
+        self.quantity * self.unit_price
+    }
+
+    pub fn product_name(&self) -> &String {
+        &self.product_name
+    }
+
+    pub fn quantity(&self) -> &u32 {
+        &self.quantity
+    }
+
+    pub fn unit_price(&self) -> &u32 {
+        &self.unit_price
+    }
+
+    pub fn set_product_name(&mut self, new_product_name: String) {
+        Self::check_product_name(new_product_name.as_str());
+        self.product_name = new_product_name
+    }
+
+    pub fn set_quantity(&mut self, new_quantity: u32) {
+        Self::check_quantity(new_quantity);
+        self.quantity = new_quantity
+    }
+
+    pub fn set_unit_price(&mut self, new_unit_price: u32) {
+        Self::check_unit_price(new_unit_price);
+        self.unit_price = new_unit_price
+    }
+}
